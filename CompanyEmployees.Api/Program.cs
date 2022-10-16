@@ -1,4 +1,5 @@
 using CompanyEmployees.Api.Extentions;
+using Contracts;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+
+if(app.Environment.IsProduction())
+{
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
