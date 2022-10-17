@@ -1,3 +1,4 @@
+using CompanyEmployees.Api.Extensions;
 using CompanyEmployees.Api.Extentions;
 using Contracts;
 using NLog;
