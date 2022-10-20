@@ -2,6 +2,8 @@ using CompanyEmployees.Api.Extensions;
 using CompanyEmployees.Api.Extentions;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,11 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //Add NLog configuration
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
+NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+    new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+        .Services.BuildServiceProvider()
+        .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+        .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureContext(builder.Configuration);
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(config =>
+    {
+        config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+    })
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>

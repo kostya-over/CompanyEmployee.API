@@ -17,6 +17,6 @@ public class MappingProfile : Profile
 
         CreateMap<Employee, EmployeeDto>();
         CreateMap<EmployeeForCreationDto, Employee>();
-        CreateMap<EmployeeForUpdateDto, Employee>();
+        CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
     }
 }
