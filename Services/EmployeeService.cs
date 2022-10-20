@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Service.Contracts;
 using Shared.DTO;
 
@@ -42,5 +43,50 @@ public class EmployeeService : IEmployeeService
         
         var employeeDto = _mapper.Map<EmployeeDto>(employeeFromDb);
         return employeeDto;
+    }
+
+    public EmployeeDto CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employee, bool trackChanges)
+    {
+        var company = _repositoryManager.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeEntity = _mapper.Map<Employee>(employee);
+        
+        _repositoryManager.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
+        _repositoryManager.Save();
+
+        var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
+        return employeeToReturn;
+
+    }
+
+    public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+    {
+        var company = _repositoryManager.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employee = _repositoryManager.Employee.GetEmployee(companyId, id, trackChanges);
+        if (employee is null)
+            throw new EmployeeNotFoundException(id);
+        
+        _repositoryManager.Employee.DeleteEmployee(employee);
+        _repositoryManager.Save();
+    }
+
+    public void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdateDto,
+        bool compTrackChanges, bool empTrackChanges)
+    {
+        var company = _repositoryManager.Company.GetCompany(companyId, compTrackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employee = _repositoryManager.Employee.GetEmployee(companyId, id, empTrackChanges);
+        if (employee is null)
+            throw new EmployeeNotFoundException(id);
+
+        _mapper.Map(employeeForUpdateDto, employee);
+        _repositoryManager.Save();
     }
 }

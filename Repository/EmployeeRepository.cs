@@ -19,4 +19,15 @@ internal class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepositor
     {
         return FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges).SingleOrDefault();
     }
+
+    public void CreateEmployeeForCompany(Guid companyId, Employee employee)
+    {
+        employee.CompanyId = companyId;
+        Create(employee);
+    }
+
+    public void DeleteEmployee(Employee employee)
+    {
+        Delete(employee);
+    }
 }
