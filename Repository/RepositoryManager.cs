@@ -23,8 +23,8 @@ public class RepositoryManager : IRepositoryManager
         _repositoryContext.Dispose();
     }
     
-    public void Save()
+    public async Task SaveAsync()
     {
-        _repositoryContext.SaveChanges();
+        await _repositoryContext.SaveChangesAsync();
     }
 }
