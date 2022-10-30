@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extentions;
+using Shared.RequestFeatuers;
 
 namespace Repository;
 
@@ -10,10 +12,16 @@ internal class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepositor
     {
     }
 
-    public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(Guid companyId, bool trackChanges)
+    public async Task<PagedList<Employee>> GetAllEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
-        return await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
-            .OrderBy(e => e.Name).ToListAsync();
+        var employees = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+            .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+            .Search(employeeParameters.SearchTerm)
+            .OrderBy(e => e.Name)
+            .ToListAsync();
+
+        return PagedList<Employee>
+            .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
     }
 
     public async Task<Employee?> GetEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)

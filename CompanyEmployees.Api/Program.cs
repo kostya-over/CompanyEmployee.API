@@ -1,5 +1,6 @@
 using CompanyEmployees.Api.Extensions;
 using CompanyEmployees.Api.Extentions;
+using CompanyEmployees.Presentation.ActionFilters;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -21,6 +22,8 @@ NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureContext(builder.Configuration);
+
+builder.Services.AddScoped<ValidationFilterAttribute>();
 
 builder.Services.AddControllers(config =>
     {
