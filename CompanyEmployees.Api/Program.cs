@@ -44,6 +44,8 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 
 var app = builder.Build();
 
@@ -66,6 +68,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
