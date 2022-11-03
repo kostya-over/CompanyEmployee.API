@@ -145,14 +145,14 @@ namespace CompanyEmployees.Api.Migrations
                         new
                         {
                             Id = "28936add-8d5b-4c49-a669-a4d32694f82b",
-                            ConcurrencyStamp = "d6e2e8f9-184b-4916-b2d0-34a1b3b492ad",
+                            ConcurrencyStamp = "65022fa7-f2d1-4e11-971d-6ed337bb1338",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "652729de-dba6-4a88-b5e8-5c25b0ff40b8",
-                            ConcurrencyStamp = "6b36a36b-b80e-4506-887a-404efd0fea52",
+                            ConcurrencyStamp = "ea0dc624-b43b-4030-970c-ca28267a8102",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -280,11 +280,9 @@ namespace CompanyEmployees.Api.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
@@ -309,6 +307,12 @@ namespace CompanyEmployees.Api.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
