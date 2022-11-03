@@ -1,5 +1,6 @@
 using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DTO;
@@ -18,6 +19,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> GetCompanies()
     {
         var companies = await _serviceManager.CompanyService.GetAllCompaniesAsync(trackChanges: false);
